@@ -79,18 +79,9 @@ you can probably just change the "L=" line.
 
 You should how have a "JsonPrint.jar" file.
 
-# DEMO
-
-Download the https://github.com/UltraMessaging/mcs_demo repo.
-In it is a sub-directory named "json_print".
-
-Copy "JsonPrint.jar" to the "json_print" sub-directory and follow the instructions
-in the README.md
-
 # STARTING THE MCS
 
-The demo mentioned above demonstrates starting the MCS with this plugin.
-Here's a description:
+This is how to configure and start the MCS to include your plugin.
 
 * In the MCS xml configuration file, set the type to "class:JsonPrint":
 ````
@@ -123,3 +114,10 @@ export LBM_XML_CONFIG_APPNAME=mcs      # MCS applicaton name that "um.xml" refer
 # Run the MCS program.
 java -classpath $L/MCS/lib/MCS.jar:$L/MCS/lib/UMS_6.15.jar:$L/MCS/lib/UMSMON_PROTO3.jar:./JsonPrint.jar:$L/MCS/lib/um-mondb-common.jar:$L/MCS/lib/protobuf-java-util-4.0.0-rc-2.jar:$L/MCS/lib/protobuf-java-4.0.0-rc-2.jar:$L/MCS/lib/gson-2.8.5.jar:$L/MCS/lib/java-getopt-1.0.13.jar:$L/MCS/lib/log4j-api-2.14.1.jar:$L/MCS/lib/log4j-core-2.14.1.jar:$L/MCS/lib/guava-24.1.1-jre.jar com.informatica.um.monitoring.UMMonitoringCollector -Z$L/MCS/bin/ummon.db mcs.xml
 ````
+
+# DEMO
+
+1. Build the "JsonPrint.jar" module (instructions above).
+2. Download the https://github.com/UltraMessaging/mcs_demo repo.
+Set your default to "json_print".
+3. Follow the instructions in the https://github.com/UltraMessaging/mcs_demo/json_print/README.md
