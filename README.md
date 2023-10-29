@@ -5,6 +5,14 @@ data in JSON format.
 # Table of contents
 
 <!-- mdtoc-start -->
+&bull; [mcs_json_print](#mcs_json_print)  
+&bull; [Table of contents](#table-of-contents)  
+&bull; [COPYRIGHT AND LICENSE](#copyright-and-license)  
+&bull; [REPOSITORY](#repository)  
+&bull; [INTRODUCTION](#introduction)  
+&bull; [THE FILES](#the-files)  
+&bull; [BUILD](#build)  
+&bull; [TEST](#test)  
 <!-- TOC created by '../mdtoc/mdtoc.pl README.md' (see https://github.com/fordsfords/mdtoc) -->
 <!-- mdtoc-end -->
 
