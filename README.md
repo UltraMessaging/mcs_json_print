@@ -120,4 +120,4 @@ java -classpath $L/MCS/lib/MCS.jar:$L/MCS/lib/UMS_6.15.jar:$L/MCS/lib/UMSMON_PRO
 1. Build the "JsonPrint.jar" module (instructions above).
 2. Download the https://github.com/UltraMessaging/mcs_demo repo.
 Set your default to "json_print".
-3. Follow the instructions in the https://github.com/UltraMessaging/mcs_demo/json_print/README.md
+3. Follow the instructions in https://github.com/UltraMessaging/mcs_demo/blob/main/json_print/README.md
