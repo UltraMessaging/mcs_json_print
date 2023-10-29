@@ -93,7 +93,6 @@ The demo mentioned above demonstrates starting the MCS with this plugin.
 Here's a description:
 
 * In the MCS xml configuration file, set the type to "class:JsonPrint":
-<ul>
 ````
   ...
   <connector>
@@ -102,21 +101,17 @@ Here's a description:
   </connector>
   ...
 ````
-</ul>
 * In the above-referenced properties file, specify the desired name of the output file
 that the plugin should write the JSON data to. For example:
-<ul>
 ````
 outFilePath=/tmp/tst.json
 ````
-</ul>
 * As of UM version 6.16, the "MCS" script include with the UM package cannot be
 used to launch the MCS program with a user-written plugin.
 This is because the "MCS" script hard-codes the jar files for the class path.
 Fortunately, the "MCS" script does little more than just assemble the proper
 command line, which you can reproduce easily-enough in your own startup script.
 Note the inclusion of "JsonPrint.jar" in the following example:
-<ul>
 ````
 # The following must be set for your environment.
 export LBM_LICENSE_INFO="Product=LBM,UME,UMQ,UMDRO:Organization=xxxx:Expiration-Date=never:License-Key=xxxx xxxx xxxx xxxx"
@@ -128,4 +123,3 @@ export LBM_XML_CONFIG_APPNAME=mcs      # MCS applicaton name that "um.xml" refer
 # Run the MCS program.
 java -classpath $L/MCS/lib/MCS.jar:$L/MCS/lib/UMS_6.15.jar:$L/MCS/lib/UMSMON_PROTO3.jar:./JsonPrint.jar:$L/MCS/lib/um-mondb-common.jar:$L/MCS/lib/protobuf-java-util-4.0.0-rc-2.jar:$L/MCS/lib/protobuf-java-4.0.0-rc-2.jar:$L/MCS/lib/gson-2.8.5.jar:$L/MCS/lib/java-getopt-1.0.13.jar:$L/MCS/lib/log4j-api-2.14.1.jar:$L/MCS/lib/log4j-core-2.14.1.jar:$L/MCS/lib/guava-24.1.1-jre.jar com.informatica.um.monitoring.UMMonitoringCollector -Z$L/MCS/bin/ummon.db mcs.xml
 ````
-</ul>
