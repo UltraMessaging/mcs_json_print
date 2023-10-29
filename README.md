@@ -12,7 +12,8 @@ data in JSON format.
 &bull; [INTRODUCTION](#introduction)  
 &bull; [THE FILES](#the-files)  
 &bull; [BUILD](#build)  
-&bull; [TEST](#test)  
+&bull; [DEMO](#demo)  
+&bull; [STARTING THE MCS](#starting-the-mcs)  
 <!-- TOC created by '../mdtoc/mdtoc.pl README.md' (see https://github.com/fordsfords/mdtoc) -->
 <!-- mdtoc-end -->
 
