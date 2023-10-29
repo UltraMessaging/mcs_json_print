@@ -12,8 +12,8 @@ data in JSON format.
 &bull; [INTRODUCTION](#introduction)  
 &bull; [THE FILES](#the-files)  
 &bull; [BUILD](#build)  
-&bull; [DEMO](#demo)  
 &bull; [STARTING THE MCS](#starting-the-mcs)  
+&bull; [DEMO](#demo)  
 <!-- TOC created by '../mdtoc/mdtoc.pl README.md' (see https://github.com/fordsfords/mdtoc) -->
 <!-- mdtoc-end -->
 
@@ -83,7 +83,8 @@ You should how have a "JsonPrint.jar" file.
 
 This is how to configure and start the MCS to include your plugin.
 
-* In the MCS xml configuration file, set the type to "class:JsonPrint":
+* In the MCS xml configuration file, set the type to "class:JsonPrint".
+Here's an excerpt from an example "mcs.xml" file:
 ````
   ...
   <connector>
@@ -92,8 +93,9 @@ This is how to configure and start the MCS to include your plugin.
   </connector>
   ...
 ````
-* In the above-referenced properties file, specify the desired name of the output file
-that the plugin should write the JSON data to. For example:
+* In the "mcs.properties" file, specify the desired name of the output file
+that the plugin should write the JSON data to.
+Here's an example "mcs.properties" file:
 ````
 outFilePath=/tmp/tst.json
 ````
