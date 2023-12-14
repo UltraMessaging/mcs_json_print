@@ -14,7 +14,7 @@ data in JSON format.
 &bull; [BUILD](#build)  
 &bull; [STARTING THE MCS](#starting-the-mcs)  
 &bull; [DEMO](#demo)  
-<!-- TOC created by '../mdtoc/mdtoc.pl README.md' (see https://github.com/fordsfords/mdtoc) -->
+<!-- TOC created by '/home/sford/bin/mdtoc.pl README.md' (see https://github.com/fordsfords/mdtoc) -->
 <!-- mdtoc-end -->
 
 # COPYRIGHT AND LICENSE
@@ -46,6 +46,15 @@ See https://github.com/UltraMessaging/mcs_json_print for code and documentation.
 
 # INTRODUCTION
 
+This repository is an example user-written MCS plugin that receives
+monitoring data and prints it in JSON format to a text file.
+The expectation is that you will replace the text file printing
+with your own monitoring data management system.
+
+For more monitoring-related examples, see:
+* https://github.com/UltraMessaging/mcs_demo
+* https://github.com/UltraMessaging/mcs_json_print
+
 Informatica recommends that Ultra Messaging users enable the
 automatic monitoring feature in their UM-based applications and most
 UM daemons (Store, DRO, etc.).
@@ -55,11 +64,6 @@ from UM.
 By default, it writes the monitoring data to an "sqlite" database.
 However, you can replace the "sqlite" interface with your own
 user-written plugin.
-
-This repository is an example user-written MCS plugin that receives
-monitoring data and prints it in JSON format to a text file.
-The expectation is that you will replace the text file printing
-with your own monitoring data management system.
 
 # THE FILES
 
@@ -95,6 +99,8 @@ Here's an excerpt from an example "mcs.xml" file:
 ````
 * In the "mcs.properties" file, specify the desired name of the output file
 that the plugin should write the JSON data to.
+The special name "-" (dash) tells the module to write to standard out
+(the property defaults to "-").
 Here's an example "mcs.properties" file:
 ````
 outFilePath=/tmp/tst.json

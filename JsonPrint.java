@@ -83,7 +83,7 @@ public class JsonPrint implements UMMonDB
 			throw new IOException("Error opening " + _outFilePath + ": " + e.getMessage());
 		}
 
-		/* Set up shutdown hook to clean up. */
+		// Set up shutdown hook to clean up.
 		try {
 			_cleanup = new Thread(() -> {
 				try {
@@ -102,18 +102,22 @@ public class JsonPrint implements UMMonDB
 	}
 
 	public void write(UMSMonMsg umsMonMsg) throws IOException {
+		// Library statistics (context, transport)
 		printMsg(umsMonMsg);
 	}
 
 	public void write(DROMonMsg droMonMsg) throws IOException {
+		// DRO daemon statistics.
 		printMsg(droMonMsg);
 	}
 
 	public void write(UMPMonMsg umpMonMsg) throws IOException {
+		// Store daemon statistics.
 		printMsg(umpMonMsg);
 	}
 
     public void write(SRSMonMsg srsMonMsg) throws IOException {
+		// SRS daemon statistics.
 		printMsg(srsMonMsg);
     }
 
