@@ -52,8 +52,8 @@ The expectation is that you will replace the text file printing
 with your own monitoring data management system.
 
 For more monitoring-related examples, see:
-* https://github.com/UltraMessaging/mcs_demo
-* https://github.com/UltraMessaging/mcs_json_print
+* https://github.com/UltraMessaging/mcs_demo - concentrates on collecting data from apps and UM daemons (Store, etc).
+* https://github.com/UltraMessaging/mon_demo - concentrates on interpreting monitoring data
 
 Informatica recommends that Ultra Messaging users enable the
 automatic monitoring feature in their UM-based applications and most
