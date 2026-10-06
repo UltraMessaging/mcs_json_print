@@ -14,7 +14,7 @@ data in JSON format.
 &bull; [BUILD](#build)  
 &bull; [STARTING THE MCS](#starting-the-mcs)  
 &bull; [DEMO](#demo)  
-<!-- TOC created by '/home/sford/bin/mdtoc.pl README.md' (see https://github.com/fordsfords/mdtoc) -->
+<!-- TOC created by '../mdtoc/mdtoc.pl README.md' (see https://github.com/fordsfords/mdtoc) -->
 <!-- mdtoc-end -->
 
 # COPYRIGHT AND LICENSE
@@ -51,6 +51,11 @@ monitoring data and prints it in JSON format to a text file.
 The expectation is that you will replace the text file printing
 with your own monitoring data management system.
 
+Each record is written as a single line of compact JSON
+(one JSON object per line, sometimes called "JSON Lines").
+Earlier versions of JsonPrint.java pretty-printed each record across
+multiple lines, with no separator between records.
+
 For more monitoring-related examples, see:
 * https://github.com/UltraMessaging/mcs_demo - concentrates on collecting data from apps and UM daemons (Store, etc).
 * https://github.com/UltraMessaging/mon_demo - concentrates on interpreting monitoring data
@@ -74,6 +79,12 @@ user-written plugin.
 
 # BUILD
 
+This version of JsonPrint.java must be run with the MCS from UM version 6.17
+or above.
+Starting with UM 6.17, the MCS uses SLF4J (with Logback) instead of Log4j,
+and passes its SLF4J logger to the plugin.
+The plugin will not load in an MCS from an earlier UM version.
+
 1. Make sure your Java environment is Java 9 or beyond.
 2. Copy "lbm.sh.example" to "lbm.sh"
 3. Modify "lbm.sh" for your environment.
@@ -81,7 +92,7 @@ If your UM installation uses the standard directory structure,
 you can probably just change the "L=" line.
 4. Run the "bld.sh" script.
 
-You should how have a "JsonPrint.jar" file.
+You should now have a "JsonPrint.jar" file.
 
 # STARTING THE MCS
 
@@ -105,7 +116,7 @@ Here's an example "mcs.properties" file:
 ````
 outFilePath=/tmp/tst.json
 ````
-* As of UM version 6.16, the "MCS" script include with the UM package cannot be
+* As of UM version 6.17, the "MCS" script include with the UM package cannot be
 used to launch the MCS program with a user-written plugin.
 This is because the "MCS" script hard-codes the jar files for the class path.
 Fortunately, the "MCS" script does little more than just assemble the proper
@@ -114,13 +125,13 @@ Note the inclusion of "JsonPrint.jar" in the following example:
 ````
 # The following must be set for your environment.
 export LBM_LICENSE_INFO="Product=LBM,UME,UMQ,UMDRO:Organization=xxxx:Expiration-Date=never:License-Key=xxxx xxxx xxxx xxxx"
-L=$HOME/UMP_6.15/
+L=$HOME/UMP_6.17
 export LD_LIBRARY_PATH=$L/Linux-glibc-2.17-x86_64/lib
 export LBM_XML_CONFIG_FILENAME=um.xml  # Path to UM library configuration file.
 export LBM_XML_CONFIG_APPNAME=mcs      # MCS applicaton name that "um.xml" references.
 
 # Run the MCS program.
-java -classpath $L/MCS/lib/MCS.jar:$L/MCS/lib/UMS_6.15.jar:$L/MCS/lib/UMSMON_PROTO3.jar:./JsonPrint.jar:$L/MCS/lib/um-mondb-common.jar:$L/MCS/lib/protobuf-java-util-4.0.0-rc-2.jar:$L/MCS/lib/protobuf-java-4.0.0-rc-2.jar:$L/MCS/lib/gson-2.8.5.jar:$L/MCS/lib/java-getopt-1.0.13.jar:$L/MCS/lib/log4j-api-2.14.1.jar:$L/MCS/lib/log4j-core-2.14.1.jar:$L/MCS/lib/guava-24.1.1-jre.jar com.informatica.um.monitoring.UMMonitoringCollector -Z$L/MCS/bin/ummon.db mcs.xml
+java -classpath $L/MCS/lib/MCS.jar:$L/MCS/lib/UMS_6.17.jar:$L/MCS/lib/UMSMON_PROTO3.jar:./JsonPrint.jar:$L/MCS/lib/um-mondb-sqlite.jar:$L/MCS/lib/um-mondb-common.jar:$L/MCS/lib/protobuf-java-util-3.21.12.jar:$L/MCS/lib/protobuf-java-3.21.12.jar:$L/MCS/lib/sqlite-jdbc-3.34.0.jar:$L/MCS/lib/gson-2.8.5.jar:$L/MCS/lib/java-getopt-1.0.13.jar:$L/MCS/lib/slf4j-api-1.7.25.jar:$L/MCS/lib/logback-classic-1.2.3.jar:$L/MCS/lib/logback-core-1.2.3.jar:$L/MCS/lib/guava-24.1.1-jre.jar com.informatica.um.monitoring.UMMonitoringCollector -Z$L/MCS/bin/ummon.db mcs.xml
 ````
 
 # DEMO

@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import com.latencybusters.lbm.UMMonDB;
 import com.latencybusters.lbm.UMSMonProtos.UMSMonMsg;
@@ -21,19 +21,19 @@ import com.google.protobuf.util.*;
   This source code example is provided by Informatica for educational
   and evaluation purposes only.
 
-  THE SOFTWARE IS PROVIDED "AS IS" AND INFORMATICA DISCLAIMS ALL WARRANTIES 
-  EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY IMPLIED WARRANTIES OF 
-  NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR 
-  PURPOSE.  INFORMATICA DOES NOT WARRANT THAT USE OF THE SOFTWARE WILL BE 
+  THE SOFTWARE IS PROVIDED "AS IS" AND INFORMATICA DISCLAIMS ALL WARRANTIES
+  EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY IMPLIED WARRANTIES OF
+  NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR
+  PURPOSE.  INFORMATICA DOES NOT WARRANT THAT USE OF THE SOFTWARE WILL BE
   UNINTERRUPTED OR ERROR-FREE.  INFORMATICA SHALL NOT, UNDER ANY CIRCUMSTANCES,
-  BE LIABLE TO LICENSEE FOR LOST PROFITS, CONSEQUENTIAL, INCIDENTAL, SPECIAL OR 
-  INDIRECT DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT OR THE 
-  TRANSACTIONS CONTEMPLATED HEREUNDER, EVEN IF INFORMATICA HAS BEEN APPRISED OF 
+  BE LIABLE TO LICENSEE FOR LOST PROFITS, CONSEQUENTIAL, INCIDENTAL, SPECIAL OR
+  INDIRECT DAMAGES ARISING OUT OF OR RELATED TO THIS AGREEMENT OR THE
+  TRANSACTIONS CONTEMPLATED HEREUNDER, EVEN IF INFORMATICA HAS BEEN APPRISED OF
   THE LIKELIHOOD OF SUCH DAMAGES.
   All of the documentation and software included in this and any
   other Informatica Inc. Ultra Messaging Releases
   Copyright (C) Informatica Inc. All rights reserved.
-  
+
   Redistribution and use in source and binary forms, with or without
   modification, are permitted only as covered by the terms of a
   valid software license agreement with Informatica Inc.
@@ -42,23 +42,11 @@ import com.google.protobuf.util.*;
 
 public class JsonPrint implements UMMonDB
 {
-	// Make these static because only one instance is needed and
-	// we need the shutdown hook to be able to get to them.
 	private Properties _properties = null;
 	private Logger _logger = null;
 	private String _outFilePath = null;
 	private BufferedWriter _outFileWriter = null;
 	private Thread _cleanup = null;
-
-
-	public JsonPrint() {
-		// Just make sure we don't get multiple instances.
-		if (_outFileWriter != null) {
-			try {
-				System.err.println("JsonPrint: Double create?");
-			} catch (Exception ignore) { }
-		}
-	}
 
 	public void setProperties(Properties properties) {
 		_properties = properties;
@@ -85,12 +73,11 @@ public class JsonPrint implements UMMonDB
 
 		// Set up shutdown hook to clean up.
 		try {
+			// The MCS also calls disconnect() at shutdown, possibly concurrently.
 			_cleanup = new Thread(() -> {
 				try {
-					_outFileWriter.flush();
-					_outFileWriter.close();
-					_outFileWriter = null;
-				} catch (Exception e) { System.out.println("Exception: " + e.getMessage()); }
+					disconnect();
+				} catch (Exception ignore) { }  // disconnect() already logged it.
 			} );
 			Runtime.getRuntime().addShutdownHook(_cleanup);
 		} catch (Exception e) {
@@ -116,44 +103,49 @@ public class JsonPrint implements UMMonDB
 		printMsg(umpMonMsg);
 	}
 
-    public void write(SRSMonMsg srsMonMsg) throws IOException {
+	public void write(SRSMonMsg srsMonMsg) throws IOException {
 		// SRS daemon statistics.
 		printMsg(srsMonMsg);
-    }
+	}
 
 	private void printMsg(Message msg) throws IOException {
 		String json = null;
 		try {
-            json = JsonFormat.printer().includingDefaultValueFields().print(msg);
-        } catch (Exception e) {
+			json = JsonFormat.printer()
+			                 .omittingInsignificantWhitespace()
+			                 .includingDefaultValueFields()
+			                 .print(msg);
+		} catch (Exception e) {
 			_logger.error("MCS-999000-5: jsonprint: Error formatting json: " + e.getMessage());
 			throw new IOException("Error formatting json: " + e.getMessage());
-        }
+		}
 
-        if (_outFileWriter != null) {
-			try {
-        		_outFileWriter.write(json);
-        	} catch (Exception e) {
-				_logger.error("MCS-999000-6: jsonprint: Error writing to " + _outFilePath + ": " + e.getMessage());
-				_outFileWriter = null;
-				throw new IOException("Error writing to " + _outFilePath + ": " + e.getMessage());
-        	}
-        }
+		synchronized (this) {
+			if (_outFileWriter != null) {
+				try {
+					_outFileWriter.write(json);
+					_outFileWriter.newLine();
+				} catch (Exception e) {
+					_logger.error("MCS-999000-6: jsonprint: Error writing to " + _outFilePath + ": " + e.getMessage());
+					_outFileWriter = null;
+					throw new IOException("Error writing to " + _outFilePath + ": " + e.getMessage());
+				}
+			}
+		}
 	}
 
-	public void disconnect() throws IOException {
+	public synchronized void disconnect() throws IOException {
+		// Called by both the MCS and the shutdown hook; the second call is a no-op.
 		if (_outFileWriter != null) {
 			try {
 				_outFileWriter.flush();
 				_outFileWriter.close();
 				_outFileWriter = null;
-        	} catch (Exception e) {
+			} catch (Exception e) {
 				_logger.error("MCS-999000-7: jsonprint: Error closing " + _outFilePath + ": " + e.getMessage());
 				_outFileWriter = null;
 				throw new IOException("Error closing " + _outFilePath + ": " + e.getMessage());
-        	}
-		} else {
-			_logger.error("MCS-999001-9: Double disconnect?");
+			}
 		}
 	}
 }

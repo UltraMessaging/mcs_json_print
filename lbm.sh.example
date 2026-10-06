@@ -1,7 +1,7 @@
 #!/bin/sh
 # lbm.sh.example - copy to "lbm.sh" and modify for your environment.
 
-L=$HOME/UMP_6.15/
+L=$HOME/UMP_6.17
 LBM=$L/Linux-glibc-2.17-x86_64
 LBMJ=$L/java
 
